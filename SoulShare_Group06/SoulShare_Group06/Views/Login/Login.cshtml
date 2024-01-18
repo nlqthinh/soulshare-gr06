@@ -1,0 +1,46 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+</head>
+<body>
+    <div>
+        <form method="post">
+            <div>
+                <p>
+                    Email:
+                </p>
+                <p>
+                    <input type="text" name="email" />
+                </p>
+            </div>
+
+            <div>
+                <p>
+                    Password:
+                </p>
+                <p>
+                    <input type="password" name="password" />
+                </p>
+            </div>
+
+            <div>
+                <p>
+                    <button type="submit"> Login </button>
+                </p>
+                <button type="button" onclick="location.href='@Url.Action("Register", "Login")'" class="btn btn-default">Register</button>
+                <p style="color:red">
+                    @ViewBag.error
+                </p>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
