@@ -68,6 +68,8 @@ namespace SoulShare_Group06.Controllers
                 var check = db.Customers.FirstOrDefault(s => s.customer_email == _user.customer_email);
                 if (check == null)
                 {
+                    // Set customer_role to 1
+                    _user.customer_role = 1;
                     _user.account_password = GetMD5(_user.account_password);
                     db.Configuration.ValidateOnSaveEnabled = false;
                     db.Customers.Add(_user);

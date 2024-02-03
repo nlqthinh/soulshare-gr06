@@ -31,5 +31,7 @@ namespace SoulShare_Group06.Models
         [Required]
         [StringLength(10)]
         public string account_phone { get; set; }
+
+        public int? customer_role { get; set; }
     }
 }

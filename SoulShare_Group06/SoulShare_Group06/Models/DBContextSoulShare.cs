@@ -8,11 +8,12 @@ namespace SoulShare_Group06.Models
     public partial class DBContextSoulShare : DbContext
     {
         public DBContextSoulShare()
-            : base("name=DBContextSoulShareConnectionString")
+            : base("name=DBContextSoulShare2")
         {
         }
 
         public virtual DbSet<Customer> Customers { get; set; }
+        public virtual DbSet<Room> Rooms { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

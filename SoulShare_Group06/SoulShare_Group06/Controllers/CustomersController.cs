@@ -20,6 +20,8 @@ namespace SoulShare_Group06.Controllers
             return View(db.Customers.ToList());
         }
 
+
+
         // GET: Customers/Details/5
         public ActionResult Details(int? id)
         {

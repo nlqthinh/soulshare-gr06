@@ -1,66 +1,102 @@
-﻿
-@{
-    ViewBag.Title = "Room";
+﻿@{
+    ViewBag.Title = "Index";
+    var user = (SoulShare_Group06.Models.Customer)System.Web.HttpContext.Current.Session["user"];
 }
-
+<h2>Index</h2>
+<p>User @user.customer_name </p>
 <button id="startBtn">Start Microphone</button>
 <button id="stopBtn">Stop Microphone</button>
+<button id="quitBtn">Quit</button>
+
+
+<p>User 2: </p>
+<button id="startBtn">Start Microphone</button>
+<button id="stopBtn">Stop Microphone</button>
+<button id="quitBtn2">Quit</button>
 
 <script>
-        var startBtn = document.getElementById('startBtn');
-        var stopBtn = document.getElementById('stopBtn');
-        var audioStream;
+    var startBtn = document.getElementById('startBtn');
+    var stopBtn = document.getElementById('stopBtn');
+    var audioStream;
 
-        startBtn.onclick = function () {
-            navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-                .then(function (stream) {
-                    audioStream = stream;
+    startBtn.onclick = function () {
+        navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+            .then(function (stream) {
+                audioStream = stream;
 
-                    // Create an AudioContext
-                    var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                // Create an AudioContext
+                var audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
-                    // Create an AnalyserNode
-                    var analyser = audioContext.createAnalyser();
-                    analyser.fftSize = 256; // You can adjust this value
+                // Create an AnalyserNode
+                var analyser = audioContext.createAnalyser();
+                analyser.fftSize = 256; // You can adjust this value
 
-                    // Connect the audio stream to the AudioContext
-                    var audioSource = audioContext.createMediaStreamSource(audioStream);
-                    audioSource.connect(analyser);
+                // Connect the audio stream to the AudioContext
+                var audioSource = audioContext.createMediaStreamSource(audioStream);
+                audioSource.connect(analyser);
 
-                    // Connect the AnalyserNode to the destination (audio output)
-                    analyser.connect(audioContext.destination);
+                // Connect the AnalyserNode to the destination (audio output)
+                analyser.connect(audioContext.destination);
 
-                    // Handle audio input
-                    var dataArray = new Uint8Array(analyser.frequencyBinCount);
-                    function updateButtonStyle() {
-                        analyser.getByteFrequencyData(dataArray);
+                // Handle audio input
+                var dataArray = new Uint8Array(analyser.frequencyBinCount);
+                function updateButtonStyle() {
+                    analyser.getByteFrequencyData(dataArray);
 
-                        // Calculate the average audio input level
-                        var inputLevel = dataArray.reduce((acc, val) => acc + val, 0) / dataArray.length;
+                    // Calculate the average audio input level
+                    var inputLevel = dataArray.reduce((acc, val) => acc + val, 0) / dataArray.length;
 
-                        // Change the button style based on the audio input level
-                        if (inputLevel > 10) { // Adjust the threshold as needed
-                            startBtn.style.backgroundColor = 'green';
-                        } else {
-                            startBtn.style.backgroundColor = '';
-                        }
-
-                        // Schedule the next update
-                        requestAnimationFrame(updateButtonStyle);
+                    // Change the button style based on the audio input level
+                    if (inputLevel > 10) { // Adjust the threshold as needed
+                        startBtn.style.backgroundColor = 'green';
+                    } else {
+                        startBtn.style.backgroundColor = '';
                     }
 
-                    // Start the update loop
-                    updateButtonStyle();
-                }).catch(function (err) {
-                    console.log('Error: ' + err);
-                });
-        };
+                    // Schedule the next update
+                    requestAnimationFrame(updateButtonStyle);
+                }
 
-        stopBtn.onclick = function () {
-            if (audioStream) {
-                audioStream.getTracks().forEach(track => track.stop());
-                startBtn.style.backgroundColor = ''; // Reset button style
+                // Start the update loop
+                updateButtonStyle();
+            }).catch(function (err) {
+                console.log('Error: ' + err);
+            });
+    };
+
+    stopBtn.onclick = function () {
+        if (audioStream) {
+            audioStream.getTracks().forEach(track => track.stop());
+            startBtn.style.backgroundColor = ''; // Reset button style
+        }
+    };
+
+    var quitBtn = document.getElementById('quitBtn');
+    quitBtn.onclick = function () {
+        quitRoom();
+    };
+
+    var quitBtn2 = document.getElementById('quitBtn2');
+    quitBtn2.onclick = function () {
+        quitRoom();
+    };
+
+    function quitRoom() {
+        // Call an AJAX function to inform the server about quitting the room
+        $.ajax({
+            url: '@Url.Action("QuitRoom", "Room")',
+            type: 'POST',
+            success: function (data) {
+                // Handle success if needed
+                console.log("Quit room successful");
+                window.location.href = '@Url.Action("Index", "Home")';
+            },
+            error: function () {
+                // Handle error if needed
+                console.log("Error quitting room");
             }
-        };
+        });
+    }
 </script>
+
 
