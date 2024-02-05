@@ -1,4 +1,5 @@
-﻿using SoulShare_Group06.Models;
+﻿using Microsoft.AspNet.SignalR;
+using SoulShare_Group06.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
@@ -14,9 +15,36 @@ namespace SoulShare_Group06.Controllers
 
         public ActionResult Index()
         {
-            string userEmail = Session["user"] as string;
+            try
+            {
+                // Retrieve user and room information from the session or database
+                var user = (SoulShare_Group06.Models.Customer)System.Web.HttpContext.Current.Session["user"];
+                var room = (SoulShare_Group06.Models.Room)System.Web.HttpContext.Current.Session["room"];
 
-            return View();
+                // Check if user and room are not null before assigning to ViewBag
+                if (user != null && room != null)
+                {
+                    ViewBag.User = user;
+                    ViewBag.Room = room;
+
+                    // Your existing code here
+                    return View();
+                }
+                else
+                {
+                    // Handle the case when user or room is null, for example, redirect to another page
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it as needed
+                // For simplicity, I'm setting an error message in TempData
+                TempData["Error"] = "An error occurred: " + ex.Message;
+
+                // Redirect to HomeController/Index
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         public ActionResult StartChat()
@@ -38,9 +66,7 @@ namespace SoulShare_Group06.Controllers
             {
                 int existingRoomId = existingRoom.room_id;
                 AssignUserToRoom(existingRoomId);
-
-                return RedirectToAction("Index");
-            }
+                return RedirectToAction("Index");            }
         }
 
         private ActionResult AssignUserToRoom(int roomId)
@@ -67,9 +93,9 @@ namespace SoulShare_Group06.Controllers
                 {
                     room.room_status = 1;
                 }
-
                 try
                 {
+                    Session["room"] = room;
                     db.SaveChanges();
                 }
                 catch (DbUpdateException ex)
@@ -137,6 +163,8 @@ namespace SoulShare_Group06.Controllers
                 try
                 {
                     db.SaveChanges();
+                    // Clear the room session variable
+                    System.Web.HttpContext.Current.Session["room"] = null;
                     return RedirectToAction("Index", "Home");
                 }
                 catch (DbUpdateException ex)

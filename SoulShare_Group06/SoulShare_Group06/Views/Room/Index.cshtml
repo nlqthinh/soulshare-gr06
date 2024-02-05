@@ -1,102 +1,118 @@
 ﻿@{
+    Layout = null;
     ViewBag.Title = "Index";
     var user = (SoulShare_Group06.Models.Customer)System.Web.HttpContext.Current.Session["user"];
+    var room = (SoulShare_Group06.Models.Room)System.Web.HttpContext.Current.Session["room"];
 }
-<h2>Index</h2>
-<p>User @user.customer_name </p>
-<button id="startBtn">Start Microphone</button>
-<button id="stopBtn">Stop Microphone</button>
-<button id="quitBtn">Quit</button>
 
 
-<p>User 2: </p>
-<button id="startBtn">Start Microphone</button>
-<button id="stopBtn">Stop Microphone</button>
-<button id="quitBtn2">Quit</button>
 
-<script>
-    var startBtn = document.getElementById('startBtn');
-    var stopBtn = document.getElementById('stopBtn');
-    var audioStream;
 
-    startBtn.onclick = function () {
-        navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-            .then(function (stream) {
-                audioStream = stream;
-
-                // Create an AudioContext
-                var audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-                // Create an AnalyserNode
-                var analyser = audioContext.createAnalyser();
-                analyser.fftSize = 256; // You can adjust this value
-
-                // Connect the audio stream to the AudioContext
-                var audioSource = audioContext.createMediaStreamSource(audioStream);
-                audioSource.connect(analyser);
-
-                // Connect the AnalyserNode to the destination (audio output)
-                analyser.connect(audioContext.destination);
-
-                // Handle audio input
-                var dataArray = new Uint8Array(analyser.frequencyBinCount);
-                function updateButtonStyle() {
-                    analyser.getByteFrequencyData(dataArray);
-
-                    // Calculate the average audio input level
-                    var inputLevel = dataArray.reduce((acc, val) => acc + val, 0) / dataArray.length;
-
-                    // Change the button style based on the audio input level
-                    if (inputLevel > 10) { // Adjust the threshold as needed
-                        startBtn.style.backgroundColor = 'green';
-                    } else {
-                        startBtn.style.backgroundColor = '';
-                    }
-
-                    // Schedule the next update
-                    requestAnimationFrame(updateButtonStyle);
-                }
-
-                // Start the update loop
-                updateButtonStyle();
-            }).catch(function (err) {
-                console.log('Error: ' + err);
-            });
-    };
-
-    stopBtn.onclick = function () {
-        if (audioStream) {
-            audioStream.getTracks().forEach(track => track.stop());
-            startBtn.style.backgroundColor = ''; // Reset button style
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SignalR Simple Chat</title>
+    <style type="text/css">
+        .container {
+            background-color: #99CCFF;
+            border: thick solid #808080;
+            padding: 20px;
+            margin: 20px;
         }
-    };
+    </style>
+</head>
+<body>
+    <h2>Room @room.room_id</h2> <!-- Print the room number -->
+    <p>User @user.customer_name </p>
+    <button id="quitBtn">Quit</button>
+    <div class="container">
+        <input type="text" id="message" />
+        <input type="button" id="sendmessage" value="Send" />
+        <input type="hidden" id="displayname" value="@user.customer_name" />
+        <ul id="discussion">
+        </ul>
+    </div>
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.4.3.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script type="text/javascript">
 
-    var quitBtn = document.getElementById('quitBtn');
-    quitBtn.onclick = function () {
-        quitRoom();
-    };
 
-    var quitBtn2 = document.getElementById('quitBtn2');
-    quitBtn2.onclick = function () {
-        quitRoom();
-    };
+        $(function () {
+            // Declare a proxy to reference the hub.
+            var chat = $.connection.chatHub;
 
-    function quitRoom() {
-        // Call an AJAX function to inform the server about quitting the room
-        $.ajax({
-            url: '@Url.Action("QuitRoom", "Room")',
-            type: 'POST',
-            success: function (data) {
-                // Handle success if needed
-                console.log("Quit room successful");
-                window.location.href = '@Url.Action("Index", "Home")';
-            },
-            error: function () {
-                // Handle error if needed
-                console.log("Error quitting room");
-            }
+                    // Execute the quitRoom function when the page is about to be unloaded
+        window.addEventListener('beforeunload', function () {
+            quitRoomSync(); // Use a synchronous AJAX request to ensure the server is notified before leaving the page
         });
-    }
-</script>
 
+        // Attach the quitRoom function to the button click event as before
+        var quitBtn = document.getElementById('quitBtn');
+        quitBtn.onclick = function () {
+            quitRoom();
+        };
 
+        // Define quitRoom function as before
+        function quitRoom() {
+            // Call an AJAX function to inform the server about quitting the room
+            $.ajax({
+                url: '@Url.Action("QuitRoom", "Room")',
+                type: 'POST',
+                async: false, // Use synchronous request to ensure the server is notified before leaving the page
+                success: function (data) {
+                    // Handle success if needed
+                    console.log("Quit room successful");
+                    chat.server.send('System', '@user.customer_name has left the room');
+                    window.location.href = '@Url.Action("Index", "Home")';
+                },
+                error: function () {
+                    // Handle error if needed
+                    console.log("Error quitting room");
+                }
+            });
+        }
+
+        // Define a synchronous version of quitRoom for use with beforeunload
+        function quitRoomSync() {
+            $.ajax({
+                url: '@Url.Action("QuitRoom", "Room")',
+                type: 'POST',
+                async: false, // Use synchronous request to ensure the server is notified before leaving the page
+                success: function (data) {
+                    // No need to handle success or redirect here since the page is about to be unloaded
+                    console.log("Quitting room beforeunload");
+                },
+                error: function () {
+                    // Handle error if needed
+                    console.log("Error quitting room beforeunload");
+                }
+            });
+        }
+            chat.client.broadcastMessage = function (name, message) {
+                // Html encode display name and message.
+                var encodedName = $('<div />').text(name).html();
+                var encodedMsg = $('<div />').text(message).html();
+                // Add the message to the page.
+                $('#discussion').append('<li><strong>' + encodedName
+                    + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
+            };
+            // Set initial focus to message input box.
+            $('#message').focus();
+
+            // Start the connection.
+            $.connection.hub.start().done(function () {
+                // Print a message when the user joins the room.
+                chat.server.send('System', '@user.customer_name has joined the room');
+
+                $('#sendmessage').click(function () {
+                    // Call the Send method on the hub.
+                    chat.server.send($('#displayname').val(), $('#message').val());
+                    // Clear text box and reset focus for the next comment.
+                    $('#message').val('').focus();
+                });
+            });
+        });
+    </script>
+</body>
+</html>
