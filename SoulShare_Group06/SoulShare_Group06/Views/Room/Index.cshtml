@@ -42,8 +42,13 @@
             // Declare a proxy to reference the hub.
             var chat = $.connection.chatHub;
 
-                    // Execute the quitRoom function when the page is about to be unloaded
+        // Execute the quitRoom function when the page is about to be unloaded
         window.addEventListener('beforeunload', function () {
+            // Use navigator.sendBeacon to asynchronously send a request to the server
+            navigator.sendBeacon('@Url.Action("QuitRoom", "Room")', null);
+
+            // Send a message to the server when the user leaves the room
+            chat.server.send('System', '@user.customer_name has left the room');
             quitRoomSync(); // Use a synchronous AJAX request to ensure the server is notified before leaving the page
         });
 
@@ -63,6 +68,7 @@
                 success: function (data) {
                     // Handle success if needed
                     console.log("Quit room successful");
+                    chat.server.quitRoom('@room.room_id');
                     chat.server.send('System', '@user.customer_name has left the room');
                     window.location.href = '@Url.Action("Index", "Home")';
                 },
@@ -82,6 +88,8 @@
                 success: function (data) {
                     // No need to handle success or redirect here since the page is about to be unloaded
                     console.log("Quitting room beforeunload");
+                    chat.server.quitRoom('@room.room_id');
+                    chat.server.send('System', '@user.customer_name has left the room');
                 },
                 error: function () {
                     // Handle error if needed
@@ -102,6 +110,7 @@
 
             // Start the connection.
             $.connection.hub.start().done(function () {
+                chat.server.joinRoom('@room.room_id');
                 // Print a message when the user joins the room.
                 chat.server.send('System', '@user.customer_name has joined the room');
 
