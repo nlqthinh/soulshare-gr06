@@ -12,6 +12,8 @@
 <html>
 <head>
     <title>SignalR Simple Chat</title>
+    <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js"></script>
+
     <style type="text/css">
         .container {
             background-color: #99CCFF;
@@ -19,9 +21,33 @@
             padding: 20px;
             margin: 20px;
         }
+
+        video {
+            background-color: #ddd;
+            border-radius: 7px;
+            margin: 10px 0px 0px 10px;
+            width: 320px;
+            height: 240px;
+        }
+
+        button,
+        .mic-status {
+            margin: 5px 0px 0px 10px !important;
+            width: 320px;
+        }
+
+        .mic-enabled {
+            background-color: blue !important;
+            color: white !important;
+        }
+
+        .mic-muted {
+            background-color: red !important;
+            color: white !important;
+        }
     </style>
 </head>
-<body>
+<body onload="showMyFace()">
     <h2>Room @room.room_id</h2> <!-- Print the room number -->
     <p>User @user.customer_name </p>
     <button id="quitBtn">Quit</button>
@@ -32,6 +58,26 @@
         <ul id="discussion">
         </ul>
     </div>
+    <video id="yourVideo" autoplay muted></video>
+    <video id="friendsVideo" autoplay></video>
+    <br />
+    <button onclick="showFriendsFace()"
+            type="button"
+            class="btn btn-primary btn-lg">
+        <span class="glyphicon glyphicon-facetime-video"
+              aria-hidden="true"></span>
+        Call
+    </button>
+    <button onclick="toggleMic()"
+            id="toggleMicButton"
+            type="button"
+            class="btn btn-secondary btn-lg mic-muted">
+        <span class="glyphicon glyphicon-microphone" aria-hidden="true"></span>
+        Toggle Mic
+    </button>
+
+    <!-- Microphone status of the other side -->
+    <div id="otherMicStatus" class="mic-status mic-muted">Microphone Muted</div>
     <script src="~/Scripts/jquery-3.4.1.min.js"></script>
     <script src="~/Scripts/jquery.signalR-2.4.3.min.js"></script>
     <script src="~/signalr/hubs"></script>
@@ -122,6 +168,155 @@
                 });
             });
         });
+
+        /*WebRTC part*/
+  var config = {
+            apiKey: "AIzaSyDYA4OkdWqaqGHXaB0y787TpSbduD97w90",
+            authDomain: "testrtc-5b2a1.firebaseapp.com",
+            databaseURL: "https://testrtc-5b2a1-default-rtdb.firebaseio.com",
+            projectId: "testrtc-5b2a1",
+            storageBucket: "testrtc-5b2a1.appspot.com",
+            messagingSenderId: "918744324692",
+            appId: "1:918744324692:web:2f7cf4af189b0482d62bc1",
+        };
+        firebase.initializeApp(config);
+
+        var roomID = "@room.room_id"; // Assuming this retrieves the current room ID from your server-side code
+        var database = firebase.database().ref(roomID); // Reference to the specific room in the database
+
+        var yourVideo = document.getElementById("yourVideo");
+        var friendsVideo = document.getElementById("friendsVideo");
+        var yourId = Math.floor(Math.random() * 1000000000);
+        var servers = {
+            iceServers: [
+                { urls: "stun:stun.services.mozilla.com" },
+                { urls: "stun:stun.l.google.com:19302" },
+                {
+                    urls: "turn:numb.viagenie.ca",
+                    credential: "webrtc",
+                    username: "websitebeaver@mail.com",
+                },
+            ],
+        };
+        var pc = new RTCPeerConnection(servers);
+        pc.onicecandidate = (event) =>
+            event.candidate ? sendMessage(yourId, JSON.stringify({ ice: event.candidate })) : console.log("Sent All Ice");
+        pc.onaddstream = (event) => (friendsVideo.srcObject = event.stream);
+
+        var localStream;
+        var micEnabled = false; // Set micEnabled to false initially
+        var toggleMicButton = document.getElementById("toggleMicButton");
+        var otherMicStatus = document.getElementById("otherMicStatus");
+
+        function sendMessage(senderId, data) {
+            var msg = database.push({ sender: senderId, message: data });
+            msg.remove();
+        }
+        function readMessage(data) {
+            var msg = JSON.parse(data.val().message);
+            var sender = data.val().sender;
+            if (sender != yourId) {
+                if (msg.ice != undefined) {
+                    pc.addIceCandidate(new RTCIceCandidate(msg.ice));
+                } else if (msg.sdp && msg.sdp.type == "offer") {
+                    // Check if msg.sdp is defined
+                    pc.setRemoteDescription(new RTCSessionDescription(msg.sdp))
+                        .then(() => pc.createAnswer())
+                        .then((answer) => pc.setLocalDescription(answer))
+                        .then(() =>
+                            sendMessage(yourId, JSON.stringify({ sdp: pc.localDescription }))
+                        );
+                } else if (msg.sdp && msg.sdp.type == "answer") {
+                    // Check if msg.sdp is defined
+                    pc.setRemoteDescription(new RTCSessionDescription(msg.sdp));
+                } else if (msg.micStatus !== undefined) {
+                    // Update microphone status of the other side
+                    updateOtherMicStatus(msg.micStatus);
+                }
+            }
+        }
+
+        database.on("child_added", readMessage);
+
+        function showMyFace() {
+            navigator.mediaDevices
+                .getUserMedia({
+                    audio: {
+                        autoGainControl: false,
+                        channelCount: 2,
+                        echoCancellation: false,
+                        latency: 0,
+                        noiseSuppression: false,
+                        sampleRate: 48000,
+                        sampleSize: 16,
+                        volume: 1.0,
+                    },
+                    video: true,
+                })
+                .then((stream) => {
+                    yourVideo.srcObject = stream;
+                    localStream = stream;
+                    // Mute the microphone tracks initially
+                    localStream.getAudioTracks().forEach((track) => {
+                        track.enabled = false;
+                    });
+                    pc.addStream(stream);
+                    // Call showFriendsFace directly after getting the user's media stream
+                    showFriendsFace();
+                });
+        }
+        function showFriendsFace() {
+            pc.createOffer().then((offer) => {
+                return pc
+                    .setLocalDescription(offer)
+                    .then(() => {
+                        let answer = pc.localDescription;
+                        answer.sdp = answer.sdp.replace(
+                            "useinbandfec=1",
+                            "useinbandfec=1; stereo=1; maxaveragebitrate=510000"
+                        );
+                        return pc.setLocalDescription(answer);
+                    })
+                    .then(() => {
+                        sendMessage(yourId, JSON.stringify({ sdp: pc.localDescription }));
+                    });
+            });
+        }
+
+        function toggleMic() {
+            if (localStream) {
+                localStream.getAudioTracks().forEach((track) => {
+                    track.enabled = !track.enabled;
+                });
+                micEnabled = !micEnabled;
+                updateMicButton();
+                console.log(micEnabled ? "Microphone enabled" : "Microphone muted");
+                // Broadcast microphone status to the other side
+                sendMessage(yourId, JSON.stringify({ micStatus: micEnabled }));
+            }
+        }
+
+        function updateMicButton() {
+            if (micEnabled) {
+                toggleMicButton.classList.remove("mic-muted");
+                toggleMicButton.classList.add("mic-enabled");
+            } else {
+                toggleMicButton.classList.remove("mic-enabled");
+                toggleMicButton.classList.add("mic-muted");
+            }
+        }
+
+        function updateOtherMicStatus(enabled) {
+            if (enabled) {
+                otherMicStatus.textContent = "Microphone Enabled";
+                otherMicStatus.classList.remove("mic-muted");
+                otherMicStatus.classList.add("mic-enabled");
+            } else {
+                otherMicStatus.textContent = "Microphone Muted";
+                otherMicStatus.classList.remove("mic-enabled");
+                otherMicStatus.classList.add("mic-muted");
+            }
+        }
     </script>
 </body>
 </html>
