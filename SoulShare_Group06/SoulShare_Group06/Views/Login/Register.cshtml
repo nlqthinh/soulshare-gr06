@@ -5,74 +5,89 @@
 }
 
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="~/Content/css/login.css">
 </head>
-<body>
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
+<body class="align">
 
-        <div class="form-horizontal">
-            <h4>Customer</h4>
-            <hr />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="grid">
+        @using (Html.BeginForm("Register", "Login", FormMethod.Post, new { @class = "form login signup" }))
+        {
+            <div class="heading-soldShare text--center">
+                <h1>Soul Share</h1>
+            </div>
+            @Html.AntiForgeryToken()
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.customer_name, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.customer_name, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.customer_name, "", new { @class = "text-danger" })
-                </div>
+            <div class="form__field">
+                <label>
+                    <div class="color-icon">
+                        <i class="fa-solid fa-person"></i>
+                    </div>
+                </label>
+                @Html.EditorFor(model => model.customer_name, new { htmlAttributes = new { @class = "form__input", placeholder = "Học và tên", required = "required" } })
+                @Html.ValidationMessageFor(model => model.customer_name, "", new { @class = "text-danger" })
             </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.customer_email, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.customer_email, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.customer_email, "", new { @class = "text-danger" })
-                </div>
+            <div class="form__field">
+                <label>
+                    <div class="color-icon">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                </label>
+                @Html.EditorFor(model => model.customer_email, new { htmlAttributes = new { @class = "form__input", placeholder = "Tài Khoản", required = "required" } })
+                @Html.ValidationMessageFor(model => model.customer_email, "", new { @class = "text-danger" })
             </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.customer_address, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.customer_address, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.customer_address, "", new { @class = "text-danger" })
-                </div>
+            <div class="form__field">
+                <label>
+                    <div class="color-icon">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                </label>
+                @Html.EditorFor(model => model.account_password, new { htmlAttributes = new { @class = "form__input", placeholder = "Mật khẩu", type = "password", required = "required" } })
+                @Html.ValidationMessageFor(model => model.account_password, "", new { @class = "text-danger" })
             </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.account_password, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.account_password, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.account_password, "", new { @class = "text-danger" })
-                </div>
+            <div class="form__field">
+                <label>
+                    <div class="color-icon">
+                        <i class="fa-solid fa-location-dot"></i>
+                    </div>
+                </label>
+                @Html.EditorFor(model => model.customer_address, new { htmlAttributes = new { @class = "form__input", placeholder = "Địa chỉ", required = "required" } })
+                @Html.ValidationMessageFor(model => model.customer_address, "", new { @class = "text-danger" })
             </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.account_phone, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.account_phone, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.account_phone, "", new { @class = "text-danger" })
-                </div>
+            <div class="form__field">
+                <label>
+                    <div class="color-icon">
+                        <i class="fa-solid fa-phone-volume"></i>
+                    </div>
+                </label>
+                @Html.EditorFor(model => model.account_phone, new { htmlAttributes = new { @class = "form__input", placeholder = "Số điện thoại", required = "required" } })
+                @Html.ValidationMessageFor(model => model.account_phone, "", new { @class = "text-danger" })
             </div>
 
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Create" class="btn btn-default" />
-                </div>
+            <div class="form__field">
+                <label>
+                    <div class="color-icon">
+                        <i class="fa-solid fa-venus-mars"></i>
+                    </div>
+                </label>
+                @Html.DropDownListFor(model => model.gender, new SelectList(new[] { new { Value = "0", Text = "Nam" }, new { Value = "1", Text = "Nữ" }, new { Value = "2", Text = "Khác" } }, "Value", "Text"), "Chọn giới tính", new { @class = "form__input", required = "required" })
+                @Html.ValidationMessageFor(model => model.gender, "", new { @class = "text-danger" })
             </div>
-        </div>
-    }
 
-    <div>
-        @Html.ActionLink("Back to List", "Index")
+            <div class="form__field">
+                <input type="submit" value="Đăng kí" class="btn">
+            </div>
+        }
     </div>
+
 </body>
 </html>
-
-

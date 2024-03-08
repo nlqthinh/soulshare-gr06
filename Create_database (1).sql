@@ -37,3 +37,10 @@ DROP CONSTRAINT FK__Room__user1__4F7CD00D;
 
 ALTER TABLE Room
 DROP CONSTRAINT FK__Room__user2__5070F446;
+
+ALTER TABLE Customer
+ADD gender int DEFAULT 3;
+
+-- Here, the gender column is added with a default value of 3 (unknown). 
+-- You can modify the default value as needed or allow NULL values if gender is not always required.
+-- '0' can represent male, '1' can represent female, and '3' can represent unknown.

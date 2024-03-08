@@ -1,0 +1,444 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SoulShare</title>
+    <link rel="stylesheet"
+          type="text/css"
+          href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap"
+          rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/css/style.css" />
+</head>
+<body>
+    <div class="wrapper">
+        <header class="header">
+            <div class="container">
+                <div class="header-container">
+                    <img srcset="~/Content/images/logo-soulshare.jpg 6x" alt="" class="header-logo" />
+                    <ul class="menu">
+                        <li class="menu-item">
+                            <a href="#" class="menu-link">Sản Phẩm</a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#" class="menu-link">Tìm hiểu</a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#" class="menu-link">An Toàn</a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#" class="menu-link">Hổ trợ</a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#" class="menu-link">Tải về</a>
+                        </li>
+                        <li class="menu-item menu-item--auth">
+                            <a href="@Url.Action("Login", "Login")">Đăng nhập</a>
+                            <a href="@Url.Action("Register", "Login")" class="button button--outline">Đăng Kí</a>
+                        </li>
+                    </ul>
+                    <div class="menu-toggle">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <div class="header-auth">
+                        <a href="@Url.Action("Login", "Login")" class="header-signin">Đăng nhập</a>
+                        <a href="@Url.Action("Register", "Login")" class="button button--outline">Đăng kí</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <main>
+            <section class="hero">
+                <div class="container">
+                    <div class="hero-container">
+                        <div class="hero-content">
+                            <h1 class="hero-heading">
+                                Đưa cách tay bạn đây <strong>Sold Share</strong>
+                                sẽ sưởi ấm
+                            </h1>
+                            <p class="text hero-desc">
+                                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusantium qui tempore maxime deserunt. Accusantium dolor delectus excepturi sequi. Nobis neque natus nostrum autem expedita voluptatibus tenetur, debitis eaque accusantium aperiam?
+                                <span class="text-medium">Sold Share</span>
+                            </p>
+                            <a href="#" class="button button--primary button--rounded">Tìm hiểu tại đây</a>
+                        </div>
+                        <div class="hero-image">
+                            <img srcset="~/Content/images/Anh.png 2x" alt="" />
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="intro">
+                <div class="container">
+                    <div class="intro-container">
+                        <div class="intro-item">
+                            <div class="intro-icon">
+                                <img srcset="~/Content/images/user.png 2x" alt="" />
+                            </div>
+                            <div class="intro-info">
+                                <h3 class="intro-title">900+</h3>
+                                <span class="intro-text">Người dùng</span>
+                            </div>
+                        </div>
+                        <div class="intro-item">
+                            <div class="intro-icon">
+                                <img srcset="~/Content/images/location.png 2x" alt="" />
+                            </div>
+                            <div class="intro-info">
+                                <h3 class="intro-title">63</h3>
+                                <span class="intro-text">Địa điểm tại việt nam</span>
+                            </div>
+                        </div>
+                        <div class="intro-item">
+                            <div class="intro-icon">
+                                <img srcset="~/Content/images/server.png 2x" alt="" />
+                            </div>
+                            <div class="intro-info">
+                                <h3 class="intro-title">200+</h3>
+                                <span class="intro-text">Đánh giá</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="feature">
+                <div class="container">
+                    <div class="feature-container">
+                        <div class="feature-image">
+                            <img src="~/Content/images/Anh.png" alt="" />
+                        </div>
+                        <div class="feature-content">
+                            <h2 class="heading">Hãy nhớ rằng chúng ta không cô đơn trong thế giới này</h2>
+                            <p class="text feature-desc">
+                                Nụ cười của bạn làm cho thế giới trở nên xinh đẹp hơn
+                            </p>
+                            <ul class="feature-list">
+                                <li class="feature-item">
+                                    <img src="~/Content/images/icon-check.svg"
+                                         alt=""
+                                         class="feature-icon" />
+                                    <span>Được gì?</span>
+                                </li>
+                                <li class="feature-item">
+                                    <img src="~/Content/images/icon-check.svg"
+                                         alt=""
+                                         class="feature-icon" />
+                                    <span>Được gì?</span>
+                                </li>
+                                <li class="feature-item">
+                                    <img src="~/Content/images/icon-check.svg"
+                                         alt=""
+                                         class="feature-icon" />
+                                    <span>Được gì?</span>
+                                </li>
+                                <li class="feature-item">
+                                    <img src="~/Content/images/icon-check.svg"
+                                         alt=""
+                                         class="feature-icon" />
+                                    <span>Được gì?</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="plan">
+                <div class="container">
+                    <div class="plan-header">
+                        <h2 class="heading">Lựa chọn các gói</h2>
+                        <p class="text">
+                            Một câu gì đó
+                        </p>
+                    </div>
+                    <div class="plan-list">
+                        <div class="plan-item">
+                            <div class="plan-image">
+                                <img alt="" srcset="~/Content/images/plan.png 2x" />
+                            </div>
+                            <h3 class="plan-title">Miễn phí</h3>
+                            <div class="plan-details">
+                                <div class="plan-info">
+                                    <img src="~/Content/images/icon-check-line.svg" alt="" />
+                                    <span>Có được tính năng gì</span>
+                                </div>
+                                <div class="plan-info">
+                                    <img src="~/Content/images/icon-check-line.svg" alt="" />
+                                    <span>Có được tính năng gì</span>
+                                </div>
+                                <div class="plan-info">
+                                    <img src="~/Content/images/icon-check-line.svg" alt="" />
+                                    <span>Có được tính năng gì</span>
+                                </div>
+                                <div class="plan-info">
+                                    <img src="~/Content/images/icon-check-line.svg" alt="" />
+                                    <span>Có được tính năng gì</span>
+                                </div>
+                                <div class="plan-info">
+                                    <img src="~/Content/images/icon-check-line.svg" alt="" />
+                                    <span>Có được tính năng gì</span>
+                                </div>
+                            </div>
+                            <h4 class="plan-price">0VNĐ/Tháng</h4>
+                            <a href="#" class="button button--outline">Select</a>
+                        </div>
+                        <div class="plan-item">
+                            <div class="plan-image">
+                                <img alt="" srcset="~/Content/images/plan.png 2x" />
+                            </div>
+                            <h3 class="plan-title">Premium</h3>
+                            <div class="plan-details">
+                                <div class="plan-info">
+                                    <img src="~/Content/images/icon-check-line.svg" alt="" />
+                                    <span>Có được tính năng gì</span>
+                                </div>
+                                <div class="plan-info">
+                                    <img src="~/Content/images/icon-check-line.svg" alt="" />
+                                    <span>Có được tính năng gì</span>
+                                </div>
+                                <div class="plan-info">
+                                    <img src="~/Content/images/icon-check-line.svg" alt="" />
+                                    <span>Có được tính năng gì</span>
+                                </div>
+                                <div class="plan-info">
+                                    <img src="~/Content/images/icon-check-line.svg" alt="" />
+                                    <span>Có được tính năng gì</span>
+                                </div>
+                                <div class="plan-info">
+                                    <img src="~/Content/images/icon-check-line.svg" alt="" />
+                                    <span>Có được tính năng gì</span>
+                                </div>
+                                <div class="plan-info">
+                                    <img src="~/Content/images/icon-check-line.svg" alt="" />
+                                    <span>Có được tính năng gì</span>
+                                </div>
+                            </div>
+                            <h4 class="plan-price">99,900VNĐ/Tháng</h4>
+                            <a href="#" class="button button--outline">Select</a>
+                        </div>
+                        <div class="plan-item is-active">
+                            <div class="plan-image">
+                                <img alt="" srcset="~/Content/images/plan.png 2x" />
+                            </div>
+                            <h3 class="plan-title">Extra Premium</h3>
+                            <div class="plan-details">
+                                <div class="plan-info">
+                                    <img src="~/Content/images/icon-check-line.svg" alt="" />
+                                    <span>Có được tính năng gì</span>
+                                </div>
+                                <div class="plan-info">
+                                    <img src="~/Content/images/icon-check-line.svg" alt="" />
+                                    <span>Có được tính năng gì</span>
+                                </div>
+                                <div class="plan-info">
+                                    <img src="~/Content/images/icon-check-line.svg" alt="" />
+                                    <span>Có được tính năng gì</span>
+                                </div>
+                                <div class="plan-info">
+                                    <img src="~/Content/images/icon-check-line.svg" alt="" />
+                                    <span>Có được tính năng gì</span>
+                                </div>
+                                <div class="plan-info">
+                                    <img src="~/Content/images/icon-check-line.svg" alt="" />
+                                    <span>Có được tính năng gì</span>
+                                </div>
+                                <div class="plan-info">
+                                    <img src="~/Content/images/icon-check-line.svg" alt="" />
+                                    <span>Có được tính năng gì</span>
+                                </div>
+                                <div class="plan-info">
+                                    <img src="~/Content/images/icon-check-line.svg" alt="" />
+                                    <span>Có được tính năng gì</span>
+                                </div>
+                            </div>
+                            <h4 class="plan-price">149.900VNĐ/Tháng</h4>
+                            <a href="#" class="button button--primary button--shadow">Select</a>
+                        </div>
+                    </div>
+                </div>
+    </div>
+    </section>
+    <section class="customer">
+        <div class="container">
+            <div class="boxed">
+                <h2 class="heading">Đánh giá từ người dùng</h2>
+                <p class="text">Những sự đánh giá của bạn sẽ góp phần nâng cao chất lượng dịch vụ của Sold Share.</p>
+            </div>
+            <div class="customer-list">
+                <div class="customer-item">
+                    <div class="customer-top">
+                        <div class="customer-info">
+                            <div class="customer-avatar">
+                                <img srcset="~/Content/images/QuangMan.jpg 2x" alt="">
+                            </div>
+                            <div class="customer-content">
+                                <h3 class="heading-small customer-name">Quang Mẫn</h3>
+                                <span class="text-small customer-address">Cần Thơ, Việt Nam</span>
+                            </div>
+                        </div>
+                        <div class="customer-rating">
+                            <span>4.5</span>
+                            <img src="~/Content/images/icon-star.svg" alt="">
+                        </div>
+                    </div>
+                    <div class="text customer-desc">“ứng dụng này thật tuyệt đối với tôi. Tôi đã tiềm được bạn đời. Anh ta rất yêu tôi. Ngoài ra vấn đề của dịch vụ tôi nghĩ là cần thêm nhiều tính năng hơn với đánh giá 4.5 tôi nghĩ nó hợp lý đối với ứng dụng n”.</div>
+                </div>
+                <div class="customer-item">
+                    <div class="customer-top">
+                        <div class="customer-info">
+                            <div class="customer-avatar">
+                                <img srcset="~/Content/images/QuangMan.jpg 2x" alt="">
+                            </div>
+                            <div class="customer-content">
+                                <h3 class="heading-small customer-name">Quang Mẫn</h3>
+                                <span class="text-small customer-address">Cần Thơ, Việt Nam</span>
+                            </div>
+                        </div>
+                        <div class="customer-rating">
+                            <span>4.5</span>
+                            <img src="~/Content/images/icon-star.svg" alt="">
+                        </div>
+                    </div>
+                    <div class="text customer-desc">“ứng dụng này thật tuyệt đối với tôi. Tôi đã tiềm được bạn đời. Anh ta rất yêu tôi. Ngoài ra vấn đề của dịch vụ tôi nghĩ là cần thêm nhiều tính năng hơn với đánh giá 4.5 tôi nghĩ nó hợp lý đối với ứng dụng n”.</div>
+                </div>
+                <div class="customer-item">
+                    <div class="customer-top">
+                        <div class="customer-info">
+                            <div class="customer-avatar">
+                                <img srcset="~/Content/images/QuangMan.jpg 2x" alt="">
+                            </div>
+                            <div class="customer-content">
+                                <h3 class="heading-small customer-name">Quang Mẫn</h3>
+                                <span class="text-small customer-address">Cần Thơ, Việt Nam</span>
+                            </div>
+                        </div>
+                        <div class="customer-rating">
+                            <span>4.5</span>
+                            <img src="~/Content/images/icon-star.svg" alt="">
+                        </div>
+                    </div>
+                    <div class="text customer-desc">“ứng dụng này thật tuyệt đối với tôi. Tôi đã tiềm được bạn đời. Anh ta rất yêu tôi. Ngoài ra vấn đề của dịch vụ tôi nghĩ là cần thêm nhiều tính năng hơn với đánh giá 4.5 tôi nghĩ nó hợp lý đối với ứng dụng n”.</div>
+                </div>
+                <div class="customer-item">
+                    <div class="customer-top">
+                        <div class="customer-info">
+                            <div class="customer-avatar">
+                                <img srcset="~/Content/images/QuangMan.jpg 2x" alt="">
+                            </div>
+                            <div class="customer-content">
+                                <h3 class="heading-small customer-name">Quang Mẫn</h3>
+                                <span class="text-small customer-address">Cần Thơ, Việt Nam</span>
+                            </div>
+                        </div>
+                        <div class="customer-rating">
+                            <span>4.5</span>
+                            <img src="~/Content/images/icon-star.svg" alt="">
+                        </div>
+                    </div>
+                    <div class="text customer-desc">“ứng dụng này thật tuyệt đối với tôi. Tôi đã tiềm được bạn đời. Anh ta rất yêu tôi. Ngoài ra vấn đề của dịch vụ tôi nghĩ là cần thêm nhiều tính năng hơn với đánh giá 4.5 tôi nghĩ nó hợp lý đối với ứng dụng n”.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    </main>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-column">
+                    <p class="footer-desc text"><span class="text-medium">Soul Share</span> Nơi sưởi ấm đôi tay và trái tim của bạn</p>
+                    <div class="social">
+                        <a href="#" class="social-item">
+                            <img srcset="~/Content/images/Facebook.png 2x" alt="">
+                        </a>
+                        <a href="#" class="social-item">
+                            <img srcset="~/Content/images/Twitter.png 2x" alt="">
+                        </a>
+                        <a href="#" class="social-item">
+                            <img srcset="~/Content/images/Instagram.png 2x" alt="">
+                        </a>
+                    </div>
+                    <span class="text-medium">123 3 tháng 2, Hưng lợi, Ninh Kiều, Cần Thơ</span></p>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-heading heading-small">Blog</h3>
+                    <ul class="footer-links">
+                        <li class="footer-item">
+                            <a href="#" class="footer-link">Download</a>
+                        </li>
+                        <li class="footer-item">
+                            <a href="#" class="footer-link">Download</a>
+                        </li>
+                        <li class="footer-item">
+                            <a href="#" class="footer-link">Download</a>
+                        </li>
+                        <li class="footer-item">
+                            <a href="#" class="footer-link">Download</a>
+                        </li>
+                        <li class="footer-item">
+                            <a href="#" class="footer-link">Download</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-heading heading-small">Chính sách</h3>
+                    <ul class="footer-links">
+                        <li class="footer-item">
+                            <a href="#" class="footer-link">Download</a>
+                        </li>
+                        <li class="footer-item">
+                            <a href="#" class="footer-link">Download</a>
+                        </li>
+                        <li class="footer-item">
+                            <a href="#" class="footer-link">Download</a>
+                        </li>
+                        <li class="footer-item">
+                            <a href="#" class="footer-link">Download</a>
+                        </li>
+                        <li class="footer-item">
+                            <a href="#" class="footer-link">Download</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-heading heading-small">Tìm hiểu thêm</h3>
+                    <ul class="footer-links">
+                        <li class="footer-item">
+                            <a href="#" class="footer-link">Download</a>
+                        </li>
+                        <li class="footer-item">
+                            <a href="#" class="footer-link">Download</a>
+                        </li>
+                        <li class="footer-item">
+                            <a href="#" class="footer-link">Download</a>
+                        </li>
+                        <li class="footer-item">
+                            <a href="#" class="footer-link">Download</a>
+                        </li>
+                        <li class="footer-item">
+                            <a href="#" class="footer-link">Download</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+    </div>
+
+    <script type="text/javascript"
+            src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript"
+            src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script src="~/Content/js/app.js"></script>
+    <!-- sass ./sass/app.scss ./css/app.css --watch -->
+</body>
+</html>

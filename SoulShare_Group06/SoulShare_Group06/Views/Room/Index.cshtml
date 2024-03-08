@@ -11,82 +11,72 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>SignalR Simple Chat</title>
+    <title>Phòng chat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="~/Content/css/chat.css">
     <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js"></script>
 
     <style type="text/css">
-        .container {
-            background-color: #99CCFF;
-            border: thick solid #808080;
-            padding: 20px;
-            margin: 20px;
-        }
-
         video {
-            background-color: #ddd;
-            border-radius: 7px;
-            margin: 10px 0px 0px 10px;
-            width: 320px;
-            height: 240px;
-        }
-
-        button,
-        .mic-status {
-            margin: 5px 0px 0px 10px !important;
-            width: 320px;
-        }
-
-        .mic-enabled {
-            background-color: blue !important;
-            color: white !important;
-        }
-
-        .mic-muted {
-            background-color: red !important;
-            color: white !important;
+               display:none;
         }
     </style>
 </head>
 <body onload="showMyFace()">
-    <h2>Room @room.room_id</h2> <!-- Print the room number -->
-    <p>User @user.customer_name </p>
-    <button id="quitBtn">Quit</button>
-    <div class="container">
-        <input type="text" id="message" />
-        <input type="button" id="sendmessage" value="Send" />
-        <input type="hidden" id="displayname" value="@user.customer_name" />
-        <ul id="discussion">
-        </ul>
-    </div>
-    <video id="yourVideo" autoplay muted></video>
-    <video id="friendsVideo" autoplay></video>
-    <br />
-    <button onclick="showFriendsFace()"
-            type="button"
-            class="btn btn-primary btn-lg">
-        <span class="glyphicon glyphicon-facetime-video"
-              aria-hidden="true"></span>
-        Call
-    </button>
-    <button onclick="toggleMic()"
-            id="toggleMicButton"
-            type="button"
-            class="btn btn-secondary btn-lg mic-muted">
-        <span class="glyphicon glyphicon-microphone" aria-hidden="true"></span>
-        Toggle Mic
-    </button>
+    <div class="wrapper">
+        <button id="quitBtn">Thoát</button>
+        <h2>Room @room.room_id</h2> <!-- Print the room number -->
+        <p>User @user.customer_name </p>
+        <div class="chatbox">
+            <div class="chatbox-media">
+                <video id="yourVideo" autoplay muted>
+                </video>
+                <video id="friendsVideo" autoplay>
+                </video>
+                <div class="chatbox-image">
+                    <img src="~/Content/images/user.png" class="chatbot-image-user">
+                </div>
+                <div class="chatbox-name">You</div>
+                <div class="chatbox-mic" id="mic-toggle">
+                    <i class="fa-solid fa-microphone-slash" id="toggleMicButton" onclick="toggleMic()"></i>
+                </div>
+                <div class="chatbox-image">
+                    <img src="~/Content/images/user.png" class="chatbot-image-user">
+                </div>
+                <div class="chatbox-name">Other Side</div>
+                <div class="chatbox-mic">
+                    <i class="fa-solid fa-microphone-slash" id="otherMicStatus"></i>
+                </div>
+            </div>
 
-    <!-- Microphone status of the other side -->
-    <div id="otherMicStatus" class="mic-status mic-muted">Microphone Muted</div>
+            <div class="chatbot-main">
+                <ul class="chat-thread" id="discussion">
+                </ul>
+                <div class="chat-window row">
+                    <input class="chat-window-message" name="chat-window-message" type="text" autocomplete="off"
+                           autofocus id="message" />
+                    <input type="button" class="send-btn" id="sendmessage" value="Gửi" />
+                    <input type="hidden" id="displayname" value="@user.customer_name" />
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <br />
     <script src="~/Scripts/jquery-3.4.1.min.js"></script>
     <script src="~/Scripts/jquery.signalR-2.4.3.min.js"></script>
     <script src="~/signalr/hubs"></script>
     <script type="text/javascript">
 
 
-        $(function () {
+    $(function () {
             // Declare a proxy to reference the hub.
-            var chat = $.connection.chatHub;
+        var chat = $.connection.chatHub;
 
         // Execute the quitRoom function when the page is about to be unloaded
         window.addEventListener('beforeunload', function () {
@@ -94,15 +84,19 @@
             navigator.sendBeacon('@Url.Action("QuitRoom", "Room")', null);
 
             // Send a message to the server when the user leaves the room
-            chat.server.send('System', '@user.customer_name has left the room');
+            chat.server.send('Hệ thống', '@user.customer_name đã rời khỏi phòng');
             quitRoomSync(); // Use a synchronous AJAX request to ensure the server is notified before leaving the page
         });
 
         // Attach the quitRoom function to the button click event as before
-        var quitBtn = document.getElementById('quitBtn');
-        quitBtn.onclick = function () {
-            quitRoom();
-        };
+        //var quitBtn = document.getElementById('quitBtn');
+        //quitBtn.onclick = function () {
+        //    quitRoom();
+        //};
+            // Attach the quitRoom function to the button click event
+        $('#quitBtn').click(function () {
+                quitRoom();
+        });
 
         // Define quitRoom function as before
         function quitRoom() {
@@ -114,8 +108,8 @@
                 success: function (data) {
                     // Handle success if needed
                     console.log("Quit room successful");
+                    chat.server.send('Hệ thống', '@user.customer_name đã rời khỏi phòng');
                     chat.server.quitRoom('@room.room_id');
-                    chat.server.send('System', '@user.customer_name has left the room');
                     window.location.href = '@Url.Action("Index", "Home")';
                 },
                 error: function () {
@@ -134,8 +128,8 @@
                 success: function (data) {
                     // No need to handle success or redirect here since the page is about to be unloaded
                     console.log("Quitting room beforeunload");
+                    chat.server.send('Hệ thống', '@user.customer_name đã rời khỏi phòng');
                     chat.server.quitRoom('@room.room_id');
-                    chat.server.send('System', '@user.customer_name has left the room');
                 },
                 error: function () {
                     // Handle error if needed
@@ -147,8 +141,10 @@
                 // Html encode display name and message.
                 var encodedName = $('<div />').text(name).html();
                 var encodedMsg = $('<div />').text(message).html();
-                // Add the message to the page.
-                $('#discussion').append('<li><strong>' + encodedName
+                var messageClass = name === '@user.customer_name' ? 'chat-message-current-user' : 'chat-message-other-user';
+
+                // Add the message to the page with the appropriate class for styling.
+                $('#discussion').append('<li class="' + messageClass + '"><strong>' + encodedName
                     + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
             };
             // Set initial focus to message input box.
@@ -158,19 +154,31 @@
             $.connection.hub.start().done(function () {
                 chat.server.joinRoom('@room.room_id');
                 // Print a message when the user joins the room.
-                chat.server.send('System', '@user.customer_name has joined the room');
+                chat.server.send('Hệ thống', '@user.customer_name đã tham gia phòng');
+
+                $('#message').keypress(function (e) {
+                    var key = e.which;
+                    if (key == 13) { // the Enter key
+                        $('#sendmessage').click();
+                        return false; // prevent the default behavior
+                    }
+                });
 
                 $('#sendmessage').click(function () {
-                    // Call the Send method on the hub.
-                    chat.server.send($('#displayname').val(), $('#message').val());
-                    // Clear text box and reset focus for the next comment.
-                    $('#message').val('').focus();
+                    // Check if the message is not empty
+                    var message = $('#message').val().trim(); // Trim whitespace
+                    if (message) { // If the message is not empty
+                        // Call the Send method on the hub.
+                        chat.server.send($('#displayname').val(), message);
+                        // Clear text box and reset focus for the next comment.
+                        $('#message').val('').focus();
+                    }
                 });
             });
         });
 
         /*WebRTC part*/
-  var config = {
+        var config = {
             apiKey: "AIzaSyDYA4OkdWqaqGHXaB0y787TpSbduD97w90",
             authDomain: "testrtc-5b2a1.firebaseapp.com",
             databaseURL: "https://testrtc-5b2a1-default-rtdb.firebaseio.com",
@@ -226,9 +234,10 @@
                         .then(() =>
                             sendMessage(yourId, JSON.stringify({ sdp: pc.localDescription }))
                         );
-                } else if (msg.sdp && msg.sdp.type == "answer") {
-                    // Check if msg.sdp is defined
-                    pc.setRemoteDescription(new RTCSessionDescription(msg.sdp));
+                } else if (msg.sdp && msg.sdp.type == "answer" && pc.signalingState == "have-local-offer") {
+                    // Check if msg.sdp is defined and signaling state is correct
+                    pc.setRemoteDescription(new RTCSessionDescription(msg.sdp))
+                        .catch(error => console.error("Error setting remote description:", error));
                 } else if (msg.micStatus !== undefined) {
                     // Update microphone status of the other side
                     updateOtherMicStatus(msg.micStatus);
@@ -238,9 +247,37 @@
 
         database.on("child_added", readMessage);
 
+        //function showMyFace() {
+        //    navigator.mediaDevices
+        //        .getUserMedia({
+        //            audio: {
+        //                autoGainControl: false,
+        //                channelCount: 2,
+        //                echoCancellation: false,
+        //                latency: 0,
+        //                noiseSuppression: false,
+        //                sampleRate: 48000,
+        //                sampleSize: 16,
+        //                volume: 1.0,
+        //            },
+        //            video: false,
+        //        })
+        //        .then((stream) => {
+        //            yourVideo.srcObject = stream;
+        //            localStream = stream;
+        //            // Mute the microphone tracks initially
+        //            localStream.getAudioTracks().forEach((track) => {
+        //                track.enabled = false;
+        //            });
+        //            pc.addStream(stream);
+        //            // Call showFriendsFace directly after getting the user's media stream
+        //            showFriendsFace();
+        //        });
+        //}
+
         function showMyFace() {
-            navigator.mediaDevices
-                .getUserMedia({
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({
                     audio: {
                         autoGainControl: false,
                         channelCount: 2,
@@ -251,20 +288,25 @@
                         sampleSize: 16,
                         volume: 1.0,
                     },
-                    video: true,
+                    video: false,
                 })
-                .then((stream) => {
-                    yourVideo.srcObject = stream;
-                    localStream = stream;
-                    // Mute the microphone tracks initially
-                    localStream.getAudioTracks().forEach((track) => {
-                        track.enabled = false;
+                    .then((stream) => {
+                        yourVideo.srcObject = stream;
+                        localStream = stream;
+                        localStream.getAudioTracks().forEach((track) => {
+                            track.enabled = false;
+                        });
+                        pc.addStream(stream);
+                        showFriendsFace();
+                    })
+                    .catch((error) => {
+                        console.error('Error accessing user media:', error);
                     });
-                    pc.addStream(stream);
-                    // Call showFriendsFace directly after getting the user's media stream
-                    showFriendsFace();
-                });
+            } else {
+                console.error('getUserMedia is not supported in this browser');
+            }
         }
+
         function showFriendsFace() {
             pc.createOffer().then((offer) => {
                 return pc
@@ -289,34 +331,50 @@
                     track.enabled = !track.enabled;
                 });
                 micEnabled = !micEnabled;
-                updateMicButton();
+                var micToggle = document.getElementById("toggleMicButton");
+                micToggle.classList.toggle("fa-microphone-slash");
+                micToggle.classList.toggle("fa-microphone");
                 console.log(micEnabled ? "Microphone enabled" : "Microphone muted");
                 // Broadcast microphone status to the other side
                 sendMessage(yourId, JSON.stringify({ micStatus: micEnabled }));
             }
         }
 
-        function updateMicButton() {
-            if (micEnabled) {
-                toggleMicButton.classList.remove("mic-muted");
-                toggleMicButton.classList.add("mic-enabled");
-            } else {
-                toggleMicButton.classList.remove("mic-enabled");
-                toggleMicButton.classList.add("mic-muted");
-            }
-        }
 
         function updateOtherMicStatus(enabled) {
-            if (enabled) {
-                otherMicStatus.textContent = "Microphone Enabled";
-                otherMicStatus.classList.remove("mic-muted");
-                otherMicStatus.classList.add("mic-enabled");
-            } else {
-                otherMicStatus.textContent = "Microphone Muted";
-                otherMicStatus.classList.remove("mic-enabled");
-                otherMicStatus.classList.add("mic-muted");
-            }
+            micToggle.classList.toggle("fa-microphone-slash", !enabled);
+            micToggle.classList.toggle("fa-microphone", enabled);
         }
+
+        //function toggleMic() {
+        //    if (localStream) {
+        //        localStream.getAudioTracks().forEach((track) => {
+        //            track.enabled = !track.enabled;
+        //        });
+        //        micEnabled = !micEnabled;
+        //        updateMicButton();
+        //        console.log(micEnabled ? "Microphone enabled" : "Microphone muted");
+        //        // Broadcast microphone status to the other side
+        //        sendMessage(yourId, JSON.stringify({ micStatus: micEnabled }));
+        //    }
+        //}
+
+        //function updateMicButton() {
+        //    if (micEnabled) {
+        //        toggleMicButton.classList.remove("mic-muted");
+        //        toggleMicButton.classList.add("mic-enabled");
+        //    } else {
+        //        toggleMicButton.classList.remove("mic-enabled");
+        //        toggleMicButton.classList.add("mic-muted");
+        //    }
+        //}
+
+        function updateOtherMicStatus(enabled) {
+            var otherMicIcon = document.getElementById("otherMicStatus");
+            otherMicIcon.classList.toggle("fa-microphone-slash", !enabled);
+            otherMicIcon.classList.toggle("fa-microphone", enabled);
+        }
+
     </script>
 </body>
 </html>

@@ -30,5 +30,21 @@ namespace SoulShare_Group06
             Groups.Remove(Context.ConnectionId, roomId);
             ConnectedUsers.Remove(Context.ConnectionId);
         }
+
+        //public void SendOffer(string roomId, string offer)
+        //{
+        //    Clients.Group(roomId).receiveOffer(offer);
+        //}
+
+        //public void SendAnswer(string targetClientId, string answer)
+        //{
+        //    Clients.Client(targetClientId).receiveAnswer(answer);
+        //}
+
+        //public void SendICECandidate(string targetClientId, string candidate)
+        //{
+        //    Clients.Client(targetClientId).receiveICECandidate(candidate);
+        //}
+
     }
 }

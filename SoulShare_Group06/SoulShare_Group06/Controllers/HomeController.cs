@@ -48,13 +48,18 @@ namespace SoulShare_Group06.Controllers
             return View();
         }
 
+        public ActionResult Home()
+        {
+            return View();
+        }
+
         public ActionResult Logout()
         {
             // Clear the user session
             Session.Clear();
 
             // Redirect to the login page
-            return RedirectToAction("Login", "Login");
+            return RedirectToAction("Home", "Home");
         }
 
     }
